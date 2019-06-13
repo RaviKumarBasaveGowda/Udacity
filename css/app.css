@@ -180,3 +180,19 @@ h1 {
   	display: inline-block;
     	text-align: center;
 }
+
+@media (max-width: 360px) {
+	.deck {
+    width: 330px;
+    min-height: 340px;
+	}
+	.deck .card {
+    height: 62px;
+    width: 62px;
+	}
+  .score-panel {
+      text-align: left;
+      width: 300px;
+      margin-bottom: 10px;
+  }
+}

@@ -3,8 +3,8 @@ const deck = document.querySelector('.deck');
 const moves=document.querySelector('.moves');
 const restart=document.querySelector('.restart');
 const timer=document.querySelector('.timer');
-const pop = document.getElementById("popupContainer")
-const starRatingEle = document.getElementById('starRating');
+const pop = document.getElementById('popupContainer');
+const star=document.querySelector('.stars');
 let previousNode,currentNode,firstClick,beginStatus,timerStatus,completed,counter,second, minute,interval;
 let cards;
 
@@ -60,7 +60,17 @@ restart.addEventListener('click',restartGame);
          frag.appendChild(newListItem);
       }
     deck.appendChild(frag);
- }
+    const frag1=document.createDocumentFragment();
+    for(let j=0;j<3;j++){
+        const newListItem=document.createElement('li');
+        const newItem=document.createElement('i');
+        newItem.className='fa fa-star';
+        newListItem.appendChild(newItem);
+        frag1.appendChild(newListItem);
+     }
+   deck.appendChild(frag);
+   star.appendChild(frag1);
+  }
 
  /**
  * @description Restarts the game by removing the deck of card from the screen and also resetting the variables
@@ -74,8 +84,6 @@ function restartGame(){
     clearInterval(interval);
     moves.innerText=0;
     timer.innerHTML = '0min 0secs';
-    while(starRatingEle.hasChildNodes())
-        starRatingEle.removeChild(starRatingEle.lastChild);
     pop.classList.remove("show");
     init();
 }
@@ -170,13 +178,22 @@ function cardOpen(){
     //Display the moves
     counter++;
     moves.innerText=counter;
-
     if(cards.length==1){ //First card clicked
-        showCards(); console.log('First Click')
+        showCards();
   }
   else if(cards.length==2){//Second card clicked
-      matchCards(); console.log('Second Click :'+cards.length)
+      matchCards();
   }
+  if(counter==20||counter==30||counter==40) //3 stars for moves less than 20, 2 for less than 30
+      updateStars();          //1 for less than 40 and 0 for more than 40
+}
+
+/**
+* @description Event to update the stars
+*/
+function updateStars(){
+    if(star.hasChildNodes())
+      star.removeChild(star.lastChild);
 }
 
 
@@ -191,10 +208,9 @@ function displayCard(event){
   }
   if(event.target.className=='card') {
         cards.push(event.target);
-        console.log("inside the click **** :"+cards.length);
         cardOpen();
-
   }
+
   if(completed=='false')
       isCompleted();
 }
@@ -218,20 +234,10 @@ function isCompleted(){
         tim.innerText= timer.innerHTML;
         pop.classList.add("show");
         //declare star rating variable
-        const frag=document.createDocumentFragment();
-        for(let j=1;j<=starRating();j++){
-            //const starListItem=document.createElement('li');
-            const starItem=document.createElement('i');
-            starItem.className='fa fa-star';
-            //frag.appendChild(starListItem);
-            frag.appendChild(starItem);
       }
-    starRatingEle.innerText='Rating:';
-    starRatingEle.appendChild(frag);
 
     //showing move, rating, time
     closePop();
-  }
 }
 
 /**
@@ -244,19 +250,6 @@ function closePop(){
     });
 }
 
-/**
-* @description Set the rating based on the number of steps taken
-*/
-function starRating(){
-  //if moves are below 20, rating is 5, bet 20-40, rating is 4, bet 30-40, rating is 3, rest is 2
-    let retValue=2;
-    if(counter< 20)
-        retValue=5;
-    else if(counter >= 20 && counter<=30)
-        retValue=4;
-    else if (counter >= 30 &&counter<=40)
-        retValue=3;
-    return(retValue);
-  }
+
 
 /* End of the Program */
